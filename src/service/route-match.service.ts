@@ -45,6 +45,7 @@ const RouterMatcherHelper = {
  */
 export function urlFragmentMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult {
 
+console.log(route);
   const urlTree: UrlTree = RouterMatcherHelper.urlTree;
   if (!urlTree && !(urlTree instanceof UrlTree)) {
     return null;

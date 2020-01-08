@@ -11,6 +11,7 @@ import { urlFragmentMatcher, RouteMatchService } from "../../service/route-match
 
 const routes: Routes = [
   {
+    // path: '',
     component: StateComponent,
     matcher: urlFragmentMatcher,
     data : {
@@ -20,6 +21,7 @@ const routes: Routes = [
     }
   },
   {
+    // path: '',
     component: ExportStatesComponent,
     matcher: urlFragmentMatcher,
     data : {
