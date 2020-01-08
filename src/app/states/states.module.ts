@@ -5,6 +5,7 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { StateComponent } from "./state.component";
 import { StatesComponent } from "./states.component";
+import { ExportStatesComponent } from "./exportstates.component";
 
 import { urlFragmentMatcher, RouteMatchService } from "../../service/route-match.service";
 
@@ -19,6 +20,19 @@ const routes: Routes = [
     }
   },
   {
+    component: ExportStatesComponent,
+    matcher: urlFragmentMatcher,
+    data : {
+      matcherconfig : {
+        fragment: 'export'
+      }
+    }
+  },
+  {
+    path: ':name',
+    component: StateComponent,
+  },
+  {
     path: "",
     component: StatesComponent
   },
@@ -29,8 +43,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  declarations: [ StateComponent, StatesComponent],
+  imports: [ BrowserModule, RouterModule.forChild(routes) ],
+  declarations: [ StateComponent, StatesComponent, ExportStatesComponent],
   providers: [RouteMatchService],
   exports: [RouterModule]
 })

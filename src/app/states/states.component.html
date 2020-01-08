@@ -1,2 +1,10 @@
 <h1>List of states</h1>
+
 <button [routerLink]="" fragment="new">New State</button>
+<button [routerLink]="" fragment="export">Export States</button>
+
+<ul>
+  <li *ngFor="let state of states">
+   <a (click)="onEditState(state)" href="javascript:void(0)"> {{ state }} </a>
+  </li>
+</ul>

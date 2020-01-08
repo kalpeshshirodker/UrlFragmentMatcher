@@ -1,5 +1,13 @@
-import { Navigation, NavigationStart, Route, Router, UrlMatchResult, UrlSegment, UrlSegmentGroup, UrlTree } from '@angular/router';
+// @Author: Kalpesh Shirodker: 
+// https://github.com/kalpeshshirodker
+
+import { Navigation, NavigationStart,
+ Route, Router,
+ RouterEvent,
+ UrlMatchResult, UrlSegment, UrlSegmentGroup, UrlTree } from '@angular/router';
 import { Injectable } from '@angular/core';
+
+import { filter } from 'rxjs/operators';
 
 const RouterMatcherHelper = {
   cn: '',
@@ -73,13 +81,12 @@ export class RouteMatchService {
 
   constructor(protected readonly router: Router) {
 
-    this.router.events.subscribe(e => {
+    this.router.events
+    .pipe(filter((e:RouterEvent) => e instanceof NavigationStart))
+    .subscribe(e => {
 
-      if (e instanceof NavigationStart) {
+      this.updateCurrentTransition();
 
-        this.updateCurrentTransition();
-
-      }
     });
 
     this.updateCurrentTransition();
