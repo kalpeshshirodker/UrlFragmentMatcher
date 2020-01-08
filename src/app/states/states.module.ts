@@ -11,32 +11,30 @@ import { urlFragmentMatcher, RouteMatchService } from "../../service/route-match
 
 const routes: Routes = [
   {
-    // path: '',
-    component: StateComponent,
-    matcher: urlFragmentMatcher,
-    data : {
-      matcherconfig : {
-        fragment: 'new'
+    path: "",
+    children : [{
+      component: StateComponent,
+      matcher: urlFragmentMatcher,
+      data : {
+        matcherconfig : {
+          fragment: 'new'
+        }
       }
-    }
-  },
-  {
-    // path: '',
-    component: ExportStatesComponent,
-    matcher: urlFragmentMatcher,
-    data : {
-      matcherconfig : {
-        fragment: 'export'
+    }, {
+      component: ExportStatesComponent,
+      matcher: urlFragmentMatcher,
+      data : {
+        matcherconfig : {
+          fragment: 'export'
+        }
       }
-    }
-  },
-  {
+    }, {
+        path: "",
+        component: StatesComponent
+    }]
+  }, {
     path: ':name',
     component: StateComponent,
-  },
-  {
-    path: "",
-    component: StatesComponent
   },
   // {
   //   path: "newstate",
