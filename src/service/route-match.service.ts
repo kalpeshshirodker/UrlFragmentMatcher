@@ -120,12 +120,12 @@ export class RouteMatchService {
   private initializeEvents() {
 
     this.router.events
-    .pipe(filter((e:RouterEvent) => e instanceof NavigationStart))
-    .subscribe(e => {
+      .pipe(filter((e:RouterEvent) => e instanceof NavigationStart))
+      .subscribe(e => {
 
-      this.updateCurrentTransition();
+        this.updateCurrentTransition();
 
-    });
+      });
 
   }
 
