@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute , Router} from '@angular/router';
+import { ActivatedRoute , Router, NavigationExtras} from '@angular/router';
 
 @Component({
   selector: 'states',
@@ -13,6 +13,10 @@ private readonly router: Router  ){
 
 }
   onEditState(state) {
-    this.router.navigateByUrl(state);
+    console.log(state)
+    const extras: NavigationExtras = {
+      relativeTo: this.activatedRoute
+    }
+    this.router.navigate([state], extras);
   }
 }

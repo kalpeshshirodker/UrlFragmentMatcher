@@ -11,31 +11,37 @@ import { RouteMatchService } from "../../service/route-match.service";
 
 const routes: Routes = [
   {
-    path: "",
+    path: "states",
+    
     children : [{
-      component: StateComponent,
-      matcher: RouteMatchService.urlFragmentMatcher,
-      data : {
-        matcherconfig : {
-          fragment: 'new'
+        path: ':name',
+        component: StateComponent,
+    },{
+      path: "",
+
+      children : [{
+        component: StateComponent,
+        matcher: RouteMatchService.urlFragmentMatcher,
+        data : {
+          matcherconfig : {
+            fragment: 'new'
+          }
         }
-      }
-    }, {
-      component: ExportStatesComponent,
-      matcher: RouteMatchService.urlFragmentMatcher,
-      data : {
-        matcherconfig : {
-          fragment: 'export'
+      }, {
+        component: ExportStatesComponent,
+        matcher: RouteMatchService.urlFragmentMatcher,
+        data : {
+          matcherconfig : {
+            fragment: 'export'
+          }
         }
-      }
-    }, {
+      }, {
         path: "",
         component: StatesComponent
-    }]
-  }, {
-    path: ':name',
-    component: StateComponent,
-  },
+      }]
+    
+  }]
+  }
   // {
   //   path: "newstate",
   //   component: StateComponent
