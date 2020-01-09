@@ -10,6 +10,28 @@ import { Injectable , ReflectiveInjector} from '@angular/core';
 import { filter } from 'rxjs/operators';
 
 /**
+ * Contains the references required to determine the current route for the application
+ */
+class RouteContext {
+  private cn: Navigation;
+
+  get currentNavigation(): Navigation {
+    return this.cn;
+  }
+
+  set currentNavigation(nav: Navigation) {
+    this.cn = nav;
+  }
+
+  get urlTree(): UrlTree {
+    if (this.cn) {
+      return (this.cn as Navigation).extractedUrl;
+    }
+    return undefined;
+  }
+}
+
+/**
  * Service makes accessible the current navigation object from the Angular router
  *
  * The navigation object is used by the urlFragmentMatcher to match the route for a given
@@ -20,6 +42,10 @@ import { filter } from 'rxjs/operators';
 export class RouteMatchService {
 
   static instance: RouteMatchService;
+  
+  static get currentContext(): RouteContext {
+    return RouteMatchService.instance.routeContext;
+  }
 
 /**
  * Custom Url matcher for matching fragment in the current browser url
@@ -41,7 +67,7 @@ export class RouteMatchService {
  */
   static urlFragmentMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult {
 
-    const urlTree: UrlTree = RouteMatchService.RouterMatcherHelper.urlTree;
+    const urlTree: UrlTree = RouteMatchService.currentContext.urlTree;
     
     if (!urlTree && !(urlTree instanceof UrlTree)) {
       return null;
@@ -66,23 +92,13 @@ export class RouteMatchService {
 
   }
 
-  static RouterMatcherHelper = {
-    cn: '',
-    get currentNavigation() {
-      return this.cn;
-    },
-    set currentNavigation(nav: Navigation) {
-      this.cn = nav;
-    },
-    get urlTree(): UrlTree {
-      if (this.cn) {
-        return (this.cn as Navigation).extractedUrl;
-      }
-      return undefined;
-    }
-  }
 
   //#region Instance definition
+  private _routeContext: RouteContext = new RouteContext();
+
+  get routeContext(): RouteContext {
+    return this._routeContext;
+  }
   constructor(protected readonly router: Router) {
 
     // Make this service a singleton
@@ -116,9 +132,10 @@ export class RouteMatchService {
   private updateCurrentTransition() {
 
     const nav: Navigation = this.router.getCurrentNavigation();
-    RouteMatchService.RouterMatcherHelper.currentNavigation = nav;
+    this._routeContext.currentNavigation = nav;
 
   }
 
   //#endregion
 }
+
