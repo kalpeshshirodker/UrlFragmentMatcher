@@ -44,9 +44,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [ BrowserModule, RouterModule.forChild(routes) ],
-  declarations: [ StateComponent, StatesComponent, ExportStatesComponent],
-  providers: [RouteMatchService],
-  exports: [RouterModule]
+  declarations: [ StateComponent, StatesComponent, ExportStatesComponent ],
+  providers: [ RouteMatchService ],
+  exports: [ RouterModule ]
 })
 export class StatesModule {
   constructor(private routeMatchService: RouteMatchService) {}
