@@ -7,14 +7,14 @@ import { StateComponent } from "./state.component";
 import { StatesComponent } from "./states.component";
 import { ExportStatesComponent } from "./exportstates.component";
 
-import { urlFragmentMatcher, RouteMatchService } from "../../service/route-match.service";
+import { RouteMatchService } from "../../service/route-match.service";
 
 const routes: Routes = [
   {
     path: "",
     children : [{
       component: StateComponent,
-      matcher: urlFragmentMatcher,
+      matcher: RouteMatchService.urlFragmentMatcher,
       data : {
         matcherconfig : {
           fragment: 'new'
@@ -22,7 +22,7 @@ const routes: Routes = [
       }
     }, {
       component: ExportStatesComponent,
-      matcher: urlFragmentMatcher,
+      matcher: RouteMatchService.urlFragmentMatcher,
       data : {
         matcherconfig : {
           fragment: 'export'

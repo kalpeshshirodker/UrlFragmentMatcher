@@ -5,25 +5,21 @@ import { Navigation, NavigationStart,
  Route, Router,
  RouterEvent,
  UrlMatchResult, UrlSegment, UrlSegmentGroup, UrlTree } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { Injectable , ReflectiveInjector} from '@angular/core';
 
 import { filter } from 'rxjs/operators';
 
-const RouterMatcherHelper = {
-  cn: '',
-  get currentNavigation() {
-    return this.cn;
-  },
-  set currentNavigation(nav: Navigation) {
-    this.cn = nav;
-  },
-  get urlTree(): UrlTree {
-    if (this.cn) {
-      return (this.cn as Navigation).extractedUrl;
-    }
-    return undefined;
-  }
-}
+/**
+ * Service makes accessible the current navigation object from the Angular router
+ *
+ * The navigation object is used by the urlFragmentMatcher to match the route for a given
+ * fragment.
+ *
+ */
+@Injectable()
+export class RouteMatchService {
+
+  static instance: RouteMatchService;
 
 /**
  * Custom Url matcher for matching fragment in the current browser url
@@ -43,44 +39,69 @@ const RouterMatcherHelper = {
  * @param group
  * @param route
  */
-export function urlFragmentMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult {
+  static urlFragmentMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult {
 
-console.log(route);
-  const urlTree: UrlTree = RouterMatcherHelper.urlTree;
-  if (!urlTree && !(urlTree instanceof UrlTree)) {
-    return null;
-  }
-
-  if (!urlTree.fragment) {
-    // url doesnt contain a fragment; ignore url matching and continue
-    return null;
-  }
-
-  // read the route data for fragment match config
-  const data = route.data;
-  if (data && data.matcherconfig) {
-
-    if (urlTree.fragment === data.matcherconfig.fragment) {
-      return ({ consumed: url });
+    const urlTree: UrlTree = RouteMatchService.RouterMatcherHelper.urlTree;
+    
+    if (!urlTree && !(urlTree instanceof UrlTree)) {
+      return null;
     }
 
+    if (!urlTree.fragment) {
+      // url doesnt contain a fragment; ignore url matching and continue
+      return null;
+    }
+
+    // read the route data for fragment match config
+    const data = route.data;
+    if (data && data.matcherconfig) {
+
+      if (urlTree.fragment === data.matcherconfig.fragment) {
+        return ({ consumed: url });
+      }
+
+    }
+
+    return null;
+
   }
 
-  return null;
+  static RouterMatcherHelper = {
+    cn: '',
+    get currentNavigation() {
+      return this.cn;
+    },
+    set currentNavigation(nav: Navigation) {
+      this.cn = nav;
+    },
+    get urlTree(): UrlTree {
+      if (this.cn) {
+        return (this.cn as Navigation).extractedUrl;
+      }
+      return undefined;
+    }
+  }
 
-}
-
-/**
- * Service makes accessible the current navigation object from the Angular router
- *
- * The navigation object is used by the urlFragmentMatcher to match the route for a given
- * fragment.
- *
- */
-@Injectable()
-export class RouteMatchService {
-
+  //#region Instance definition
   constructor(protected readonly router: Router) {
+
+    // Make this service a singleton
+    if(RouteMatchService.instance) {
+      return RouteMatchService.instance;
+    }
+
+    // Create instance and initialize the service
+    this.initializeEvents();
+
+    // Update the reference for the current navigation
+    this.updateCurrentTransition();
+
+    // save reference for later use
+    RouteMatchService.instance = this;
+
+  }
+
+  private initializeEvents() {
 
     this.router.events
     .pipe(filter((e:RouterEvent) => e instanceof NavigationStart))
@@ -90,14 +111,14 @@ export class RouteMatchService {
 
     });
 
-    this.updateCurrentTransition();
-
   }
 
-  updateCurrentTransition() {
+  private updateCurrentTransition() {
 
     const nav: Navigation = this.router.getCurrentNavigation();
-    RouterMatcherHelper.currentNavigation = nav;
+    RouteMatchService.RouterMatcherHelper.currentNavigation = nav;
 
   }
+
+  //#endregion
 }
