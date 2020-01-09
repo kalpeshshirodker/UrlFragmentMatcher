@@ -25,7 +25,7 @@ class RouteContext {
 
   get urlTree(): UrlTree {
     if (this.cn) {
-      return (this.cn as Navigation).extractedUrl;
+      return this.cn.extractedUrl;
     }
     return undefined;
   }
@@ -65,7 +65,8 @@ export class RouteMatchService {
  * @param group
  * @param route
  */
-  static urlFragmentMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult {
+
+  static urlFragmentMatcher (url: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult {
 
     const urlTree: UrlTree = RouteMatchService.currentContext.urlTree;
     
