@@ -1,11 +1,10 @@
 // @Author: Kalpesh Shirodker: 
 // https://github.com/kalpeshshirodker
 
-import { Navigation, NavigationStart,
+import { Injectable } from '@angular/core';
+import { Navigation,
  Route, Router,
- RouterEvent,
  UrlMatchResult, UrlSegment, UrlSegmentGroup, UrlTree } from '@angular/router';
-import { Injectable , ReflectiveInjector} from '@angular/core';
 import { filter } from 'rxjs/operators';
 
 /**
