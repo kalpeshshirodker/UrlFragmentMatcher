@@ -7,13 +7,21 @@ import { AppComponent } from "./app.component";
 
 import { StatesModule } from "./states/states.module";
 
-
 @NgModule({
-  imports: [BrowserModule, FormsModule, RouterModule.forRoot([]), StatesModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    RouterModule.forRoot([
+      {
+        path: "",
+        redirectTo: 'states',
+        pathMatch: 'full'
+      }
+    ]),
+    StatesModule
+  ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],
   exports: [RouterModule]
 })
-export class AppModule {
-  
-}
+export class AppModule {}

@@ -5,23 +5,43 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { StateComponent } from "./state.component";
 import { StatesComponent } from "./states.component";
+import { ExportStatesComponent } from "./exportstates.component";
 
-import { urlFragmentMatcher, RouteMatchService } from "../../service/route-match.service";
+import { RouteMatchService } from "../../service/route-match.service";
 
 const routes: Routes = [
   {
-    component: StateComponent,
-    matcher: urlFragmentMatcher,
-    data : {
-      matcherconfig : {
-        fragment: 'new'
-      }
-    }
-  },
-  {
-    path: "",
-    component: StatesComponent
-  },
+    path: "states",
+    
+    children : [{
+        path: ':name',
+        component: StateComponent,
+    },{
+      path: "",
+
+      children : [{
+        component: StateComponent,
+        matcher: RouteMatchService.urlFragmentMatcher,
+        data : {
+          matcherconfig : {
+            fragment: 'new'
+          }
+        }
+      }, {
+        component: ExportStatesComponent,
+        matcher: RouteMatchService.urlFragmentMatcher,
+        data : {
+          matcherconfig : {
+            fragment: 'export'
+          }
+        }
+      }, {
+        path: "",
+        component: StatesComponent
+      }]
+    
+  }]
+  }
   // {
   //   path: "newstate",
   //   component: StateComponent
@@ -29,10 +49,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  declarations: [ StateComponent, StatesComponent],
-  providers: [RouteMatchService],
-  exports: [RouterModule]
+  imports: [ BrowserModule, RouterModule.forChild(routes) ],
+  declarations: [ StateComponent, StatesComponent, ExportStatesComponent ],
+  providers: [ RouteMatchService ],
+  exports: [ RouterModule ]
 })
 export class StatesModule {
   constructor(private routeMatchService: RouteMatchService) {}
